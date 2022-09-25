@@ -33,14 +33,15 @@ public class NaverApi {
     public void findBankPath() {
         List<Banktree> rootlist = banktreeRepository.findAll();
         //모든 나무 위치 받아와서
-
+      //  System.out.println("for tree:start");
         for( Banktree tree : rootlist) { //api 던지기
             float[][] root = new float[][]{{tree.getStartX(), tree.getStartY()}, {tree.getGoalX(), tree.getGoalY()}};
 
+            System.out.println("url start  ");
 
             String apiURL = "https://naveropenapi.apigw.ntruss.com/map-direction/v1/driving?start=+" +
-                    root[0][0] + "," + root[0][1] +
-                    "+&goal=" + root[1][0] + "," + root[1][1];
+                    root[0][1] + "," + root[0][0] +
+                    "+&goal=" + root[1][1] + "," + root[1][0];
 
 
             Map<String, String> requestHeaders = new HashMap<>();
@@ -48,15 +49,18 @@ public class NaverApi {
             requestHeaders.put("X-NCP-APIGW-API-KEY", clientSecret);
 
             String responseBody = get(apiURL, requestHeaders);
-            //gSystem.out.println(responseBody);
+
+            System.out.println("test!!  "+responseBody);
 
             tree.setPath(responseBody);
+            break;
 
         }//모든 트리 경로설정완료
     }
 
     private String get(String apiUrl, Map<String, String> requestHeaders) {
         HttpURLConnection con = connect(apiUrl);
+        System.out.println("get start");
         try{
             con.setRequestMethod("GET");
             for(Map.Entry<String, String> header :requestHeaders.entrySet()){
@@ -82,13 +86,14 @@ public class NaverApi {
         ){
             StringBuilder responseBody = new StringBuilder();
             String line;
+
             while((line = br.readLine())!=null){
                 responseBody.append(line);
+                System.out.println("this is line"+ line);
             }
             return responseBody.toString();
         }catch (IOException e){
             throw new RuntimeException("API 실패했습니다.",e);
-
         }
     }
 

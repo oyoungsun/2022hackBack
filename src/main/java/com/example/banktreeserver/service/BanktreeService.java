@@ -24,6 +24,7 @@ public class BanktreeService {
 
     @PostConstruct
     public void init(){
+        System.out.println("start init()");
         naverApi.findBankPath();
     }
     public List<Banktree> banktreeList() {
