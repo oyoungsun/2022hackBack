@@ -6,6 +6,13 @@ import com.example.banktreeserver.naverapi.NaverApi;
 import com.example.banktreeserver.repository.BanktreeRepository;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.datasource.init.DataSourceInitializer;
+import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -19,14 +26,7 @@ public class BanktreeService {
     BanktreeRepository banktreeRepository;
     @Autowired
     KakaoApi kakaoApi;
-    @Autowired
-    NaverApi naverApi;
 
-    @PostConstruct
-    public void init(){
-        System.out.println("start init()");
-        naverApi.findBankPath();
-    }
     public List<Banktree> banktreeList() {
       //test code
       //  banktreeRepository.save(new Banktree(1L));

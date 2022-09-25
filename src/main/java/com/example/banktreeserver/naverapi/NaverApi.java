@@ -23,21 +23,20 @@ import java.util.Map;
 @Service
 public class NaverApi {
 
+    @Value("${CLIENT_ID}")
+    String clientID;
+    @Value("${CLIENT_SECRET}")
+    String clientSecret;
+
     @Autowired
     BanktreeRepository banktreeRepository;
-    @Value("$CLIENT_ID")
-    String clientID;
-    @Value("$CLIENT_SECERET")
-    String clientSecret;
 
     public void findBankPath() {
         List<Banktree> rootlist = banktreeRepository.findAll();
-        //모든 나무 위치 받아와서
-      //  System.out.println("for tree:start");
+     //   System.out.println("size()"+rootlist.size());
+
         for( Banktree tree : rootlist) { //api 던지기
             float[][] root = new float[][]{{tree.getStartX(), tree.getStartY()}, {tree.getGoalX(), tree.getGoalY()}};
-
-            System.out.println("url start  ");
 
             String apiURL = "https://naveropenapi.apigw.ntruss.com/map-direction/v1/driving?start=+" +
                     root[0][1] + "," + root[0][0] +
@@ -45,22 +44,21 @@ public class NaverApi {
 
 
             Map<String, String> requestHeaders = new HashMap<>();
+
             requestHeaders.put("X-NCP-APIGW-API-KEY-ID", clientID);
             requestHeaders.put("X-NCP-APIGW-API-KEY", clientSecret);
 
             String responseBody = get(apiURL, requestHeaders);
 
-            System.out.println("test!!  "+responseBody);
+            tree.setId(tree.getId());
 
-            tree.setPath(responseBody);
-            break;
 
         }//모든 트리 경로설정완료
     }
 
     private String get(String apiUrl, Map<String, String> requestHeaders) {
         HttpURLConnection con = connect(apiUrl);
-        System.out.println("get start");
+
         try{
             con.setRequestMethod("GET");
             for(Map.Entry<String, String> header :requestHeaders.entrySet()){
@@ -89,7 +87,6 @@ public class NaverApi {
 
             while((line = br.readLine())!=null){
                 responseBody.append(line);
-                System.out.println("this is line"+ line);
             }
             return responseBody.toString();
         }catch (IOException e){
