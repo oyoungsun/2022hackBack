@@ -23,6 +23,8 @@ public class Banktree {
     private float goalX;
     private float goalY;
 
+    private String path;
+
 //    @Builder
 //    public Banktree(Long id){
 //        this.id = id;
